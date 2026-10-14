@@ -1,0 +1,7 @@
+import {Link} from 'react-router-dom'
+import {Minus,Plus,X} from 'lucide-react'
+import {getProduct,available} from '../../data/products'
+import {money} from '../../utils/format'
+import {useStore} from '../../context/StoreContext'
+import Photo from '../ui/Photo'
+export default function CartRows({readOnly=false}){const {cart,changeQuantity,removeItem}=useStore();return <div className="cart-rows">{cart.map(item=>{const p=getProduct(item.id);if(!p)return null;const color=p.colors.find(c=>c.id===item.color);return <article className="cart-row" key={item.key}><Link className="cart-row-image" to={`/product/${p.id}`}><Photo image={p.image} alt={p.name} width={460}/></Link><div className="cart-row-info"><div><Link className="cart-row-name" to={`/product/${p.id}`}>{p.name}</Link><p>{color?.name||item.color} finish</p><p>{money(p.price)} each</p></div><div className="cart-row-footer">{readOnly?<span>Qty {item.quantity}</span>:<div className="cart-quantity"><button onClick={()=>changeQuantity(item.key,item.quantity-1)} disabled={item.quantity<=1} aria-label={`Decrease ${p.name} quantity`}><Minus size={14}/></button><span>{item.quantity}</span><button onClick={()=>changeQuantity(item.key,item.quantity+1)} disabled={item.quantity>=available(p,item.color)} aria-label={`Increase ${p.name} quantity`}><Plus size={14}/></button></div>}<strong>{money(p.price*item.quantity)}</strong></div></div>{!readOnly&&<button aria-label={`Remove ${p.name}`} className="cart-remove" onClick={()=>removeItem(item.key)}><X size={18}/></button>}</article>})}</div>}

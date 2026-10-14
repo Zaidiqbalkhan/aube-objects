@@ -1,0 +1,6 @@
+import {Link} from 'react-router-dom'
+import {ArrowUpRight,Heart} from 'lucide-react'
+import Photo from '../ui/Photo'
+import {useStore} from '../../context/StoreContext'
+import {money} from '../../utils/format'
+export default function ProductCard({product}){const {wishlist,toggleWishlist}=useStore();const liked=wishlist.includes(product.id);return <article className="product-card"><div className="product-photo"><Link className="product-photo-link" to={`/product/${product.id}`} aria-label={`View ${product.name}`}><Photo image={product.image} alt={`${product.name} — ${product.subtitle}`} width={900}/></Link>{product.badge&&<span className="product-badge">{product.badge}</span>}<button className={`wish-button ${liked?'liked':''}`} aria-label={`${liked?'Remove':'Add'} ${product.name} ${liked?'from':'to'} wishlist`} aria-pressed={liked} onClick={()=>toggleWishlist(product.id)}><Heart size={19} fill={liked?'currentColor':'none'}/></button><Link className="quick-link" to={`/product/${product.id}`} aria-label={`Explore ${product.name}`}><ArrowUpRight size={20}/></Link></div><Link className="product-info" to={`/product/${product.id}`}><div><h3>{product.name}</h3><p>{product.subtitle}</p></div><strong>{money(product.price)}</strong></Link></article>}
